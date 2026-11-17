@@ -27,7 +27,7 @@ app.post("/login", async(req, res)=>{
 const {email, senha}= req.body;
 
 try {
-  
+
     //consultar os dados de login no banco de dados.
     const resultado= await pool.query(
         "SELECT id, nome, email FROM administrador WHERE email=$1 AND senha=$2",
@@ -49,8 +49,23 @@ return res.status(401).json({
 } catch (error) {
     console.log("Erro ao realizar login!", error);
     return res.status(500).json({
-        mensagem: "Erro no servidor - rota de login."
+        mensagem: "Erro no servidor - rota de login." + error
     })
+}
+});
+
+//rota para listar administradores
+app.get("/administradores", async (req, res)=>{
+try {
+    const resultado= await pool.query(
+        "SELECT * FROM administrador ORDER BY nome"
+    )
+    res.json(resultado.rows) 
+} catch (error) {
+    console.log(error);
+res.status(500).json({
+mensagem: "Erro ao listar administradores."+error
+});
 }
 });
 
