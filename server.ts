@@ -69,6 +69,27 @@ mensagem: "Erro ao listar administradores."+error
 }
 });
 
+//rota para cadastrar administrador
+app.post("/administradores", async (req, res) => {
+const {nome, email, senha}= req.body;
+
+try {
+    await pool.query(
+        "INSERT INTO administrador (nome, email, senha) VALUES ($1, $2, $3)",
+        [nome, email, senha]
+    );
+
+        res.json({
+mensagem: "Administrador cadastrado com sucesso"            
+        })
+        
+} catch (error) {
+console.log(error);
+res.status(500).json({
+    mensagem: "Erro ao cadastrar administrador: "+error
+});
+}
+});
 
 app.listen(3000, ()=>{
     console.log("Servidor iniciado na porta 3000!")
